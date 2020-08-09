@@ -1,0 +1,12 @@
+
+@font-face {
+  font-family: 'Reem Kufi Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('./assets/fonts/Reem Kufi Regular'), url('./assets/fonts/ReemKufi-Regular.woff') format('woff');
+  }
+
+html, body {
+  font-family: 'Reem Kufi Regular', sans-serif !important;
+  
+}
