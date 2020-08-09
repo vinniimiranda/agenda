@@ -10,6 +10,8 @@ import { useDispatch } from 'react-redux'
 import { signOut } from '../../store/modules/auth/actions'
 import * as TIIcons from 'react-icons/ti'
 import * as AIIcons from 'react-icons/ai'
+import * as GIIcons from 'react-icons/gi'
+import * as FAIcons from 'react-icons/fa'
 
 const Nav: React.FC = () => {
   const dispatch = useDispatch()
@@ -20,9 +22,9 @@ const Nav: React.FC = () => {
     { path: '/dashboard', label: 'Dashboard', icon () { return <AIIcons.AiOutlineDashboard style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/schedule', label: 'Calendário', icon () { return <TIIcons.TiCalendar style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/profile', label: 'Perfil', icon () { return <Description style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
-    { path: '/assurance', label: 'Convênios', icon () { return <Chat style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
-    { path: '/docs', label: 'Doutores', icon () { return <Chat style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
-    { path: '/patients', label: 'Pacientes', icon () { return <Chat style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } }
+    { path: '/assurance', label: 'Convênios', icon () { return <GIIcons.GiHealthNormal style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
+    { path: '/docs', label: 'Doutores', icon () { return <FAIcons.FaUserMd style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
+    { path: '/patients', label: 'Pacientes', icon () { return <FAIcons.FaUsers style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } }
   ]
 
   function handleLogout () {
