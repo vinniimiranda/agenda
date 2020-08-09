@@ -57,7 +57,7 @@ const RouteWrapper: React.FC<Props> = ({ component: Component, isPrivate = false
     return <Redirect to="/" />
   }
   if (signed && !isPrivate) {
-    return <Redirect to="/jobs" />
+    return <Redirect to="/home" />
   }
 
   const Layout = signed ? DefaultLayout : AuthLayout

@@ -17,7 +17,7 @@ export function* signIn ({ payload }: ReturnType<typeof signInRequest>) {
 
     yield put(closeSnackbar(null))
 
-    history.push('/profile')
+    history.push('/home')
   } catch (error) {
     if (error.response?.data?.errors) {
       yield put(enqueueSnackbar({

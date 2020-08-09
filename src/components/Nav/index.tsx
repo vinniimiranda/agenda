@@ -19,11 +19,11 @@ const Nav: React.FC = () => {
   const theme = useTheme()
 
   const routes = [
-    { path: '/dashboard', label: 'Dashboard', icon () { return <AIIcons.AiOutlineDashboard style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
+    { path: '/home', label: 'home', icon () { return <AIIcons.AiFillHome style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/schedule', label: 'Calendário', icon () { return <TIIcons.TiCalendar style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/profile', label: 'Perfil', icon () { return <Description style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/assurance', label: 'Convênios', icon () { return <GIIcons.GiHealthNormal style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
-    { path: '/docs', label: 'Doutores', icon () { return <FAIcons.FaUserMd style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
+    { path: '/doctors', label: 'Doutores', icon () { return <FAIcons.FaUserMd style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/patients', label: 'Pacientes', icon () { return <FAIcons.FaUsers style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } }
   ]
 
@@ -31,18 +31,18 @@ const Nav: React.FC = () => {
     dispatch(signOut())
   }
 
-  return <Box width="11rem" position="fixed" margin="2rem" height="calc(100vh - 4rem)"
-    borderRadius="2rem"
+  return <Box width="8rem" position="fixed" margin="6rem 2rem 0 0" height="calc(100vh - 6rem)"
+    borderRadius="0 20rem 0 0"
     boxShadow="0px 0px 20px rgba(0,0,0,0.1)"
     bgcolor={theme.palette.type === 'dark' ? theme.palette.background.paper
       : theme.palette.primary.main}>
     <Box display="flex" flexDirection="column" padding="1rem 0" justifyContent="space-between" alignItems="center" height="100%">
-      <Avatar alt="User" src="https://avatars2.githubusercontent.com/u/33462844?s=460&u=1dd18b87002acbd2e2b7635566d10517b593c304&v=4"
+      {/* <Avatar alt="User" src="https://avatars2.githubusercontent.com/u/33462844?s=460&u=1dd18b87002acbd2e2b7635566d10517b593c304&v=4"
         style={{
           width: '4rem',
           height: '4rem'
-        }} />
-      <Box justifySelf="center" alignSelf="center" style={{ width: '100%' }} >
+        }} /> */}
+      <Box justifySelf="center" marginTop="6rem" alignSelf="center" style={{ width: '100%' }} >
         <List component="ul">
           {routes.map(route => (
             <ListItem
@@ -52,18 +52,28 @@ const Nav: React.FC = () => {
               component="li"
               onClick={() => history.push(route.path)}
               style={{
-                padding: '1rem 0',
-
-                borderLeft: history.location.pathname === route.path ? `4px solid ${theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default}` : '4px solid transparent',
-                width: '100% !important'
+                // padding: '1rem 0',
+                margin: '2rem 0',
+                width: '100% !important',
+                alignSelf: 'center',
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'center'
               }}>
-              <ListItemIcon style={{ display: 'flex', justifyContent: 'center', margin: 0, padding: '0 1rem' }}>
+              <ListItemIcon style={{ display: 'flex', flex: 1, justifyContent: 'center', margin: 0, padding: '0 1rem' }}>
                 {route.icon()}
               </ListItemIcon>
-              <ListItemText style={{
+              <div style={{
+                width: '.3rem',
+                height: '2rem',
+                borderRadius: '.3rem',
+                marginRight: '.3rem',
+                backgroundColor: history.location.pathname === route.path ? `${theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default}` : 'transparent'
+              }}></div>
+              {/* <ListItemText style={{
                 color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default,
                 fontWeight: 'bold'
-              }}>{route.label}</ListItemText>
+              }}>{route.label}</ListItemText> */}
             </ListItem>
           ))}
         </List>
