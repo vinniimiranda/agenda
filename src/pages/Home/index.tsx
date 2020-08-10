@@ -3,11 +3,25 @@ import { Box, useTheme, Grid, TableContainer, Table, TableHead, TableRow, TableC
 import {
   AreaChart, Area, XAxis, Tooltip, ResponsiveContainer
 } from 'recharts'
+import { ViewState } from '@devexpress/dx-react-scheduler'
+import {
+  Scheduler,
+  WeekView,
+  Appointments
+} from '@devexpress/dx-react-scheduler-material-ui'
 
 import { BsFillClockFill } from 'react-icons/bs'
 import { FaCheck } from 'react-icons/fa'
 import moment from 'moment'
 import 'moment/min/locales'
+
+const currentDate = '2020-08-09'
+const schedulerData = [
+  { startDate: '2020-08-10T09:45', endDate: '2020-08-10T11:00', title: 'Flavio' },
+  { startDate: '2020-08-11T09:45', endDate: '2020-08-11T11:00', title: 'Rafael' },
+  { startDate: '2020-08-14T08:30', endDate: '2020-08-14T09:00', title: 'Flavio' },
+  { startDate: '2020-08-10T12:00', endDate: '2020-08-10T13:30', title: 'Go to a gym' }
+]
 
 const data = [
   {
@@ -37,20 +51,23 @@ const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     head: {
       fontWeight: 'bold',
-      color: theme.palette.primary.main
+      color: theme.palette.primary.main,
+      borderBottom: 'none !important'
     },
     body: {
 
       fontSize: 14,
       margin: '2rem !important',
+      borderBottom: 'none !important',
+
       '&:first-child': {
-        borderTopLeftRadius: '3rem',
-        borderBottomLeftRadius: '3rem'
+        borderTopLeftRadius: '1rem',
+        borderBottomLeftRadius: '1rem'
 
       },
       '&:last-child': {
-        borderTopRightRadius: '3rem',
-        borderBottomRightRadius: '3rem'
+        borderTopRightRadius: '1rem',
+        borderBottomRightRadius: '1rem'
       }
 
     }
@@ -60,18 +77,20 @@ const StyledTableCell = withStyles((theme: Theme) =>
 const StyledTableRow = withStyles((theme: Theme) =>
   createStyles({
     root: {
-      borderTop: `16px solid ${theme.palette.background.default}`,
-      borderBottom: `16px solid ${theme.palette.background.default}`,
+
       backgroundColor: theme.palette.background.paper,
-      borderRadius: '1rem !important',
+
       '&:nth-of-type(odd)': {
         // backgroundColor: theme.palette.action.hover
       },
       '&:hover': {
         backgroundColor: theme.palette.primary.main,
-        color: '#fff !important'
-
+        cursor: 'pointer',
+        '& td': {
+          color: '#fff'
+        }
       }
+
     }
   })
 )(TableRow)
@@ -185,17 +204,25 @@ const Home: React.FC = () => {
     </Grid>
     <Box display="flex" justifyContent="space-between">
       <Grid container spacing={1} >
-        <Grid item lg={6} md={6} sm={12} xs={12} xl={8}>
+        <Grid item lg={6} md={6} sm={12} xs={12} xl={6}>
           <Box padding="1rem" >
 
             <h2 style={{
               color: theme.palette.primary.main,
-              margin: '.4ren'
+              margin: '.4rem'
             }}>
               Próximas consultas
             </h2>
             <TableContainer >
-              <Table aria-label="caption table">
+              <Table aria-label="caption table" style={{
+                borderCollapse: 'separate',
+                borderSpacing: '0 1rem',
+                border: '0',
+                borderColor: 'transparent',
+                borderBottom: 'none !important',
+                boxShadow: '0px 4px 20px rgba(0,0,0,.10)'
+              }
+              } >
                 <TableHead>
                   <TableRow>
 
@@ -209,12 +236,10 @@ const Home: React.FC = () => {
 
                 <TableBody>
                   {[1, 3, 2, 4, 6].map(app => (
-                    <StyledTableRow key={app} style={{
-                      margin: '1rem 0'
-                    }}>
+                    <StyledTableRow key={app} >
                       <StyledTableCell align="center" >Flavio</StyledTableCell>
                       <StyledTableCell align="center" >Ortodondia</StyledTableCell>
-                      <StyledTableCell align="center" >09/08/2020</StyledTableCell>
+                      <StyledTableCell align="center" >10/08/2020</StyledTableCell>
                       <StyledTableCell align="center" >09:45</StyledTableCell>
                       <StyledTableCell align="center" >
                         {app % 2 !== 0 ? <BsFillClockFill style={{ color: '#f87200' }} /> : <FaCheck style={{ color: '#4eddb5' }} />}
@@ -226,14 +251,39 @@ const Home: React.FC = () => {
             </TableContainer>
           </Box>
         </Grid>
-        <Grid item lg={6} md={6} sm={12} xl={4}>
+        <Grid item lg={6} md={6} sm={12} xl={6} >
           <Box padding="1rem" >
 
             <h2 style={{
               color: theme.palette.primary.main,
-              margin: '.4ren'
+              margin: '.4rem'
             }}>Calendário da Semana </h2>
 
+          </Box>
+          <Box height="100%" padding="1rem" borderRadius="1rem">
+            <Scheduler
+              data={schedulerData}
+              height="auto"
+              locale="pt-BR"
+              rootComponent={({ ...props }) => <Box {...props} borderRadius="1rem"></Box>}
+            >
+              <ViewState
+                currentDate={currentDate}
+              />
+              <WeekView
+                displayName="Agosto"
+                cellDuration={30}
+                excludedDays={[0]}
+                startDayHour={8}
+                endDayHour={15}
+              />
+              <Appointments
+                appointmentComponent={({ ...restProps }) => <Appointments.Appointment {...restProps} style={{
+                  backgroundColor: theme.palette.primary.main,
+                  color: '#fff'
+                }} />}
+              />
+            </Scheduler>
           </Box>
         </Grid>
       </Grid>
