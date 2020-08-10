@@ -2,7 +2,6 @@ import React from 'react'
 
 import './config/ReactotronConfig'
 import './App.css'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 import ThemeProvider from './context/ThemeContext'
 
