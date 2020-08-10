@@ -10,3 +10,33 @@ html, body {
   font-family: 'Reem Kufi Regular', sans-serif !important;
   
 }
+
+.animate {
+  animation: showUp 2s ease;
+}
+
+.grow-animate {
+  animation: growUp .4s ease-out;
+}
+
+@keyframes growUp {
+  from {
+    transform: scaleY(0);
+  } 
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes showUp {
+  
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+    transition: all .5s ease;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}

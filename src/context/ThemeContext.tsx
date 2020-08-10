@@ -43,10 +43,10 @@ const ThemeProvider: React.FC = ({ children }) => {
           // secondary: {
           //   main: darkTheme ? "#00DDAA" : "#EE7633",
           // },
-          // background: {
-          //   default: darkTheme ? "#000014" : "#FAFAFA",
-          //   paper: darkTheme ? "#111128" : "#EEE",
-          // },
+          background: {
+            default: darkTheme ? '#000014' : '#fafafa',
+            paper: darkTheme ? '#111128' : '#fff'
+          },
           text: {
             primary: darkTheme ? '#FFF' : '#333',
             secondary: darkTheme ? '#FFF' : '#333'

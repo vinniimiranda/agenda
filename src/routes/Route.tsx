@@ -27,7 +27,7 @@ const DefaultLayout: React.FC = ({ children }) => {
     <Box display="flex">
       {!responsive && <Nav />}
 
-      <Box padding={responsive ? '.5rem .75rem' : '1rem 2rem'} width="100%" marginLeft={responsive ? 0 : '12.5rem'}>
+      <Box padding={responsive ? '.5rem .75rem' : '1rem 2rem'} width="100%" marginLeft={responsive ? 0 : '8rem'}>
         {responsive && <NavResponsive isOpen={isOpen} handleClose={handleClose} />}
         <Box display="flex" marginBottom=".5rem" justifyContent={responsive ? 'space-between' : 'flex-end'}>
           {responsive && <Box>

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
-import { Box, useTheme, Avatar, List, ListItem, ListItemIcon, Drawer, ListItemText } from '@material-ui/core'
+import { withStyles, Theme } from '@material-ui/core/styles'
+import { Box, useTheme, Avatar, List, ListItem, ListItemIcon, Drawer, ListItemText, Tooltip } from '@material-ui/core'
 import {
   List as ListIcon, Description, Chat, ExitToApp
 } from '@material-ui/icons'
@@ -18,9 +18,19 @@ const Nav: React.FC = () => {
 
   const theme = useTheme()
 
+  const CustomTooltip = withStyles((theme: Theme) => ({
+    tooltip: {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+
+      fontSize: theme.typography.pxToRem(15)
+
+    }
+  }))(Tooltip)
+
   const routes = [
-    { path: '/home', label: 'home', icon () { return <AIIcons.AiFillHome style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
-    { path: '/schedule', label: 'Calendário', icon () { return <TIIcons.TiCalendar style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
+    { path: '/home', label: 'Início', icon () { return <AIIcons.AiFillHome style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
+    { path: '/schedule', label: 'Consultas', icon () { return <TIIcons.TiCalendar style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/profile', label: 'Perfil', icon () { return <Description style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/assurance', label: 'Convênios', icon () { return <GIIcons.GiHealthNormal style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/doctors', label: 'Doutores', icon () { return <FAIcons.FaUserMd style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
@@ -45,36 +55,40 @@ const Nav: React.FC = () => {
       <Box justifySelf="center" marginTop="6rem" alignSelf="center" style={{ width: '100%' }} >
         <List component="ul">
           {routes.map(route => (
-            <ListItem
-              disableGutters
-              key={route.path}
-              button
-              component="li"
-              onClick={() => history.push(route.path)}
-              style={{
-                // padding: '1rem 0',
-                margin: '2rem 0',
-                width: '100% !important',
-                alignSelf: 'center',
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'center'
-              }}>
-              <ListItemIcon style={{ display: 'flex', flex: 1, justifyContent: 'center', margin: 0, padding: '0 1rem' }}>
-                {route.icon()}
-              </ListItemIcon>
-              <div style={{
-                width: '.3rem',
-                height: '2rem',
-                borderRadius: '.3rem',
-                marginRight: '.3rem',
-                backgroundColor: history.location.pathname === route.path ? `${theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default}` : 'transparent'
-              }}></div>
-              {/* <ListItemText style={{
+            <CustomTooltip title={route.label}
+              placement="right-start"
+              key={route.path} aria-label={route.label}>
+              <ListItem
+                disableGutters
+
+                button
+                component="li"
+                onClick={() => history.push(route.path)}
+                style={{
+                  // padding: '1rem 0',
+                  margin: '2rem 0',
+                  width: '100% !important',
+                  alignSelf: 'center',
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'center'
+                }}>
+                <ListItemIcon style={{ display: 'flex', flex: 1, justifyContent: 'center', margin: 0, padding: '0 1rem' }}>
+                  {route.icon()}
+                </ListItemIcon>
+                <div className="grow-animate" style={{
+                  width: '.3rem',
+                  height: '2rem',
+                  borderRadius: '.3rem',
+                  marginRight: '.3rem',
+                  backgroundColor: history.location.pathname === route.path ? `${theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default}` : 'transparent'
+                }}></div>
+                {/* <ListItemText style={{
                 color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default,
                 fontWeight: 'bold'
               }}>{route.label}</ListItemText> */}
-            </ListItem>
+              </ListItem>
+            </CustomTooltip>
           ))}
         </List>
       </Box>
