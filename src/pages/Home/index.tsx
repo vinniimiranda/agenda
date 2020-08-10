@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Box, useTheme, Grid, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, withStyles, Theme, createStyles } from '@material-ui/core'
 import {
   AreaChart, Area, XAxis, Tooltip, ResponsiveContainer
@@ -97,14 +97,6 @@ const StyledTableRow = withStyles((theme: Theme) =>
 const Home: React.FC = () => {
   const theme = useTheme()
 
-  const [day, setDay] = useState(moment())
-
-  useEffect(() => {
-    setInterval(() => {
-      setDay(moment())
-    }, 1000)
-  }, [])
-
   return <Box display="flex"
     justifyContent="space-around"
     flexDirection="column">
@@ -113,7 +105,7 @@ const Home: React.FC = () => {
         boxShadow="0px 3px 10px rgba(0,0,0,0.10)"
         bgcolor={theme.palette.background.paper} margin="1rem 0" borderRadius="1rem">
         <span style={{ fontSize: '1.3rem', color: theme.palette.primary.main }}>
-          {day.locale('pt-BR').format('D [de] MMMM [de] YYYY [às] HH:mm:ss')}
+          {moment().locale('pt-BR').format('D [de] MMMM [de] YYYY [às] HH:mm')}
         </span>
       </Box>
     </Box>
@@ -225,7 +217,6 @@ const Home: React.FC = () => {
               } >
                 <TableHead>
                   <TableRow>
-
                     <StyledTableCell align="center" >Nome</StyledTableCell>
                     <StyledTableCell align="center" >Especialidade</StyledTableCell>
                     <StyledTableCell align="center" >Dia</StyledTableCell>
@@ -235,7 +226,7 @@ const Home: React.FC = () => {
                 </TableHead>
 
                 <TableBody>
-                  {[1, 3, 2, 4, 6].map(app => (
+                  {[1, 3, 2, 4, 6, 8, 10, 12, 22, 24].map(app => (
                     <StyledTableRow key={app} >
                       <StyledTableCell align="center" >Flavio</StyledTableCell>
                       <StyledTableCell align="center" >Ortodondia</StyledTableCell>
