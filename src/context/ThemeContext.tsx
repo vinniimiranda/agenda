@@ -40,9 +40,10 @@ const ThemeProvider: React.FC = ({ children }) => {
             contrastText: '#fff'
 
           },
-          // secondary: {
-          //   main: darkTheme ? "#00DDAA" : "#EE7633",
-          // },
+          secondary: {
+            main: darkTheme ? '#00BFA6' : '#4caf50',
+            contrastText: '#fff'
+          },
           background: {
             default: darkTheme ? '#000014' : '#fafafa',
             paper: darkTheme ? '#111128' : '#fff'

@@ -6,7 +6,7 @@
   src: local('./assets/fonts/Reem Kufi Regular'), url('./assets/fonts/ReemKufi-Regular.woff') format('woff');
   }
 
-html, body {
+html, body, #root  {
   font-family: 'Reem Kufi Regular', sans-serif !important;
   
 }
@@ -20,6 +20,11 @@ html, body {
   animation: growUp .4s ease-out;
 }
 
+
+/* .MuiTableCell-body, .MuiTableCell-head  {
+  font-family: 'Reem Kufi Regular', sans-serif !important;
+  
+} */
 @keyframes growUp {
   from {
     transform: scaleY(0);

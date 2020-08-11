@@ -104,7 +104,7 @@ const SignIn: React.FC = () => {
                     name="email"
                     inputProps={{ autoCapitalize: 'off' }}
                     inputRef={register({ required: true, pattern: /\S+@\S+\.\S+/ })}
-                    label="Email"
+                    label="Email *"
                   />
                   {!!errors.email && <FormHelperText>{
                     errors.email.type === 'pattern' ? 'Digite um e-mail válido' : 'Campo obrigatório'
@@ -119,7 +119,7 @@ const SignIn: React.FC = () => {
                     type="password"
                     autoComplete="current-password"
                     name="password"
-                    label="Senha"
+                    label="Senha *"
                     inputProps={{ autoCapitalize: 'off' }}
                     inputRef={register({ required: true })}
                   />

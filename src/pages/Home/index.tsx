@@ -14,6 +14,7 @@ import { BsFillClockFill } from 'react-icons/bs'
 import { FaCheck } from 'react-icons/fa'
 import moment from 'moment'
 import 'moment/min/locales'
+moment.locale('pt-BR')
 
 const currentDate = '2020-08-09'
 const schedulerData = [
@@ -248,9 +249,12 @@ const Home: React.FC = () => {
             <h2 style={{
               color: theme.palette.primary.main,
               margin: '.4rem'
-            }}>Calendário da Semana </h2>
+            }}>Calendário da Semana (<span style={{
+              textTransform: 'capitalize'
+            }}>{moment().format('MMMM YYYY')})</span></h2>
 
           </Box>
+
           <Box height="100%" padding="1rem" borderRadius="1rem">
             <Scheduler
               data={schedulerData}
