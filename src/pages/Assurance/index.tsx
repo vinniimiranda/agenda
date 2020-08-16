@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Button, Grid, FormControl, InputLabel, OutlinedInput, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, withStyles, createStyles, Theme, useTheme, IconButton, CircularProgress } from '@material-ui/core'
 import { Add, EditOutlined } from '@material-ui/icons'
+import { lighten, darken } from 'polished'
 
 // import { Container } from './styles';
 
@@ -16,8 +17,19 @@ const Assurance: React.FC = () => {
     createStyles({
       head: {
         fontWeight: 'bold',
-        color: theme.palette.primary.main,
-        borderBottom: 'none !important'
+        color: '#fff',
+        backgroundColor: theme.palette.primary.main,
+        borderBottom: 'none !important',
+        '&:first-child': {
+          borderTopLeftRadius: '.3rem',
+          borderBottomLeftRadius: '.3rem'
+
+        },
+        '&:last-child': {
+          borderTopRightRadius: '.3rem',
+          borderBottomRightRadius: '.3rem'
+        }
+
       },
       body: {
 
@@ -49,11 +61,8 @@ const Assurance: React.FC = () => {
           // backgroundColor: theme.palette.action.hover
         },
         '&:hover': {
-          backgroundColor: theme.palette.primary.main,
-          cursor: 'pointer',
-          '& td': {
-            color: '#fff'
-          }
+          backgroundColor: theme.palette.type === 'dark' ? lighten('.10', theme.palette.background.paper) : darken('.10', theme.palette.background.paper),
+          cursor: 'pointer'
         }
 
       }

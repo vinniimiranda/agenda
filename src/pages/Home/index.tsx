@@ -10,6 +10,8 @@ import {
   Appointments
 } from '@devexpress/dx-react-scheduler-material-ui'
 
+import { darken, lighten } from 'polished'
+
 import { BsFillClockFill } from 'react-icons/bs'
 import { FaCheck } from 'react-icons/fa'
 import moment from 'moment'
@@ -18,10 +20,11 @@ moment.locale('pt-BR')
 
 const currentDate = '2020-08-09'
 const schedulerData = [
-  { startDate: '2020-08-10T09:45', endDate: '2020-08-10T11:00', title: 'Flavio' },
-  { startDate: '2020-08-11T09:45', endDate: '2020-08-11T11:00', title: 'Rafael' },
-  { startDate: '2020-08-14T08:30', endDate: '2020-08-14T09:00', title: 'Flavio' },
-  { startDate: '2020-08-10T12:00', endDate: '2020-08-10T13:30', title: 'Go to a gym' }
+
+  { startDate: '2020-08-15T08:00', endDate: '2020-08-15T08:30', title: 'Pedro' },
+  { startDate: '2020-08-15T08:30', endDate: '2020-08-15T09:00', title: 'João' },
+  { startDate: '2020-08-15T09:00', endDate: '2020-08-15T09:30', title: 'Jorge' },
+  { startDate: '2020-08-15T09:30', endDate: '2020-08-15T10:00', title: 'Flavio' }
 ]
 
 const data = [
@@ -52,8 +55,18 @@ const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     head: {
       fontWeight: 'bold',
-      color: theme.palette.primary.main,
-      borderBottom: 'none !important'
+      color: '#fff',
+      backgroundColor: theme.palette.primary.main,
+      borderBottom: 'none !important',
+      '&:first-child': {
+        borderTopLeftRadius: '.3rem',
+        borderBottomLeftRadius: '.3rem'
+
+      },
+      '&:last-child': {
+        borderTopRightRadius: '.3rem',
+        borderBottomRightRadius: '.3rem'
+      }
     },
     body: {
 
@@ -62,13 +75,13 @@ const StyledTableCell = withStyles((theme: Theme) =>
       borderBottom: 'none !important',
 
       '&:first-child': {
-        borderTopLeftRadius: '1rem',
-        borderBottomLeftRadius: '1rem'
+        borderTopLeftRadius: '.3rem',
+        borderBottomLeftRadius: '.3rem'
 
       },
       '&:last-child': {
-        borderTopRightRadius: '1rem',
-        borderBottomRightRadius: '1rem'
+        borderTopRightRadius: '.3rem',
+        borderBottomRightRadius: '.3rem'
       }
 
     }
@@ -85,10 +98,10 @@ const StyledTableRow = withStyles((theme: Theme) =>
         // backgroundColor: theme.palette.action.hover
       },
       '&:hover': {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.type === 'dark' ? lighten('.10', theme.palette.background.paper) : darken('.10', theme.palette.background.paper),
         cursor: 'pointer',
         '& td': {
-          color: '#fff'
+          // color: '#fff'
         }
       }
 
@@ -263,7 +276,7 @@ const Home: React.FC = () => {
               rootComponent={({ ...props }) => <Box {...props} borderRadius="1rem"></Box>}
             >
               <ViewState
-                currentDate={currentDate}
+                defaultCurrentDate={new Date()}
               />
               <WeekView
                 displayName="Agosto"

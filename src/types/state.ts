@@ -9,13 +9,7 @@ export type RootState = {
     profile: {
       id?: string;
       email: string;
-      customers: [
-        { id: string; name: string; }
-      ];
-      reset: boolean;
-      role: string;
     }
-    customer?: string;
   }
 
 }
