@@ -15,7 +15,6 @@ import {
   AppointmentForm,
   DragDropProvider,
   EditRecurrenceMenu,
-  AllDayPanel,
   DayView,
   TodayButton,
   DateNavigator
@@ -33,27 +32,31 @@ import {
   Button,
   Fab, TextField,
   IconButton
-  , Select, MenuItem, InputLabel, Box, FormControl, Theme
+  , Select, MenuItem, InputLabel, Box, FormControl, Theme, fade
 } from '@material-ui/core/'
 
 import {
-  LocationOn,
+
   Add as AddIcon,
   Notes,
   Close,
   CalendarToday,
-  Create
+  Create,
+  Person,
+  WhatsApp
 } from '@material-ui/icons/'
 
 import moment from 'moment'
 import 'moment/min/locales'
+import { teal, blue, indigo } from '@material-ui/core/colors'
 moment.locale('pt-BR')
 
 const appointments = [
-  { startDate: '2020-08-15T08:00', endDate: '2020-08-15T08:30', title: 'Pedro', id: 1, doc: 'Daniela' },
-  { startDate: '2020-08-15T08:30', endDate: '2020-08-15T09:00', title: 'João', id: 2 },
-  { startDate: '2020-08-15T09:00', endDate: '2020-08-15T09:30', title: 'Jorge', id: 3 },
-  { startDate: '2020-08-15T09:30', endDate: '2020-08-15T10:00', title: 'Flavio', id: 4 }]
+  { startDate: '2020-08-17T08:00', endDate: '2020-08-17T08:30', title: 'Franciely', patient: 'Franciely', id: 1, doc: 'Daniela' },
+  { startDate: '2020-08-17T10:30', endDate: '2020-08-17T11:00', title: 'Flavio', patient: 'Flavio', id: 2, doc: 'Daniela' }
+  // { startDate: '2020-08-17T09:00', endDate: '2020-08-17T09:30', title: 'Telma', patient: 'Telma', id: 3, doc: 'Daniela' },
+  // { startDate: '2020-08-17T09:30', endDate: '2020-08-17T10:00', title: 'Felipe', patient: 'Felipe', id: 4, doc: 'Daniela' }
+]
 
 const containerStyles = (theme: Theme) => ({
   container: {
@@ -98,7 +101,61 @@ const containerStyles = (theme: Theme) => ({
   },
   textField: {
     width: '100%'
+  },
+  appointment: {
+    borderRadius: 0,
+    borderBottom: 0
+  },
+  highPriorityAppointment: {
+    borderLeft: `4px solid ${teal[500]}`
+  },
+  mediumPriorityAppointment: {
+    borderLeft: `4px solid ${blue[500]}`
+  },
+  lowPriorityAppointment: {
+    borderLeft: `4px solid ${indigo[500]}`
+  },
+  weekEndCell: {
+    backgroundColor: fade(theme.palette.action.disabledBackground, 0.04),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.action.disabledBackground, 0.04)
+    },
+    '&:focus': {
+      backgroundColor: fade(theme.palette.action.disabledBackground, 0.04)
+    }
+  },
+  weekEndDayScaleCell: {
+    backgroundColor: fade(theme.palette.action.disabledBackground, 0.06)
+  },
+  text: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   }
+
+})
+
+const AppointmentContent = withStyles(containerStyles, { name: 'AppointmentContent' })(({
+  classes, data, ...restProps
+}: AppointmentContentProps) => {
+  return (
+    <Appointments.AppointmentContent {...restProps} data={data}>
+      <div className={classes.container}>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+
+          <div className={classes.text}>
+            {`Paciente: ${data.patient}`}
+          </div>
+          <div className={classes.text}>
+            {moment(data.startDate).format('HH:mm') + ' - ' + moment(data.endDate).format('HH:mm')}
+          </div>
+        </div>
+        <div className={classes.text}>
+          {`Médico: ${data.doc}`}
+        </div>
+      </div>
+    </Appointments.AppointmentContent>
+  )
 })
 
 type AppointmentFormContainerBasicProps = {
@@ -175,6 +232,16 @@ const AppointmentFormContainerBasic: React.FC<AppointmentFormContainerBasicProps
     className: classes.textField
   })
 
+  const selectEditorProps = (field, key) => ({
+    variant: 'outlined',
+    onChange: ({ target: change }) => changeAppointment({
+      field: [key], changes: change.value
+    }),
+    value: displayAppointmentData[key] || '',
+    label: field[0].toUpperCase() + field.slice(1),
+    className: classes.textField
+  })
+
   const pickerEditorProps = field => ({
     className: classes.picker,
     // keyboard: true,
@@ -201,7 +268,6 @@ const AppointmentFormContainerBasic: React.FC<AppointmentFormContainerBasicProps
       target={absoluteRef}
       fullSize
       onHide={onHide}
-
     >
       <div>
         <div className={classes.header}>
@@ -216,42 +282,70 @@ const AppointmentFormContainerBasic: React.FC<AppointmentFormContainerBasicProps
           <div className={classes.wrapper}>
             <Create className={classes.icon} color="action" />
             <TextField
-              {...textEditorProps('title') as any}
+              {...textEditorProps('Título') as any}
             />
           </div>
           <div className={classes.wrapper}>
             <CalendarToday className={classes.icon} color="action" />
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <KeyboardDateTimePicker
-                label="Start Date"
+                label="Inicio"
                 {...pickerEditorProps('startDate') as any}
               />
               <KeyboardDateTimePicker
-                label="End Date"
+                label="Fim"
                 {...pickerEditorProps('endDate') as any}
               />
             </MuiPickersUtilsProvider>
           </div>
+
           <div className={classes.wrapper}>
-            <LocationOn className={classes.icon} color="action" />
-            <TextField
-              {...textEditorProps('location') as any}
-            />
+            <Person className={classes.icon} color="action" />
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Dr(a).</InputLabel>
+              <Select {...selectEditorProps('Dr(a).', 'doc')}>
+
+                <MenuItem value="Daniela">Daniela</MenuItem>
+
+              </Select>
+            </FormControl>
+            <FormControl fullWidth variant="outlined" style={{ marginLeft: '1rem' }}>
+              <InputLabel>Paciente</InputLabel>
+              <Select {...selectEditorProps('Paciente', 'patient')}>
+                <MenuItem value="Franciely">Franciely</MenuItem>
+                <MenuItem value="Flavio">Flavio</MenuItem>
+              </Select>
+            </FormControl>
+
           </div>
           <div className={classes.wrapper}>
             <Notes className={classes.icon} color="action" />
             <TextField
-              {...textEditorProps('notes') as any}
+              {...textEditorProps('Anotações') as any}
               multiline
               rows="6"
             />
           </div>
+          <div className={classes.wrapper}>
+
+          </div>
         </div>
         <div className={classes.buttonGroup}>
+
+          {!isNewAppointment && (<Button
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+            onClick={() => {
+              window.open(`https://wa.me/5511976362040?text=Flavio, gostaria de confirmar sua consulta: ${moment(appointmentData.startDate).format('DD/MM/YYYY [às] HH:mm')}`)
+            }}
+            startIcon={<WhatsApp />} >
+            Confirmar
+          </Button>)}
           {!isNewAppointment && (
             <Button
               variant="outlined"
-              color="secondary"
+              color="inherit"
               className={classes.button}
               onClick={() => {
                 visibleChange()
@@ -261,8 +355,9 @@ const AppointmentFormContainerBasic: React.FC<AppointmentFormContainerBasicProps
               Delete
             </Button>
           )}
+
           <Button
-            variant="outlined"
+            variant="contained"
             color="primary"
             className={classes.button}
             onClick={() => {
@@ -291,7 +386,6 @@ const styles = theme => ({
 /* eslint-disable-next-line react/no-multi-comp */
 class Demo extends React.PureComponent {
   constructor (props) {
-    let appointmentForm: any
     super(props)
     this.state = {
       data: appointments,
@@ -400,6 +494,8 @@ class Demo extends React.PureComponent {
     this.setState((state) => {
       let { data } = state
       if (added) {
+        console.log(added)
+
         const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0
         data = [...data, { id: startingAddedId, ...added, allDay: false }]
       }
@@ -433,6 +529,7 @@ class Demo extends React.PureComponent {
       <>
         <Scheduler
           data={data}
+
           locale="pt-BR"
         >
           <ViewState
@@ -461,7 +558,6 @@ class Demo extends React.PureComponent {
             intervalCount={1}
 
           />
-          <AllDayPanel />
           <MonthView
             dayScaleLayoutComponent={({ ...restProps }) => <MonthView.DayScaleLayout {...restProps} cellComponent={({ ...restProps }) =>
               <MonthView.DayScaleCell
@@ -471,7 +567,7 @@ class Demo extends React.PureComponent {
 
           />
           <EditRecurrenceMenu />
-          <Appointments />
+          <Appointments appointmentContentComponent={AppointmentContent} />
           <AppointmentTooltip
             showOpenButton
             showCloseButton
@@ -481,7 +577,7 @@ class Demo extends React.PureComponent {
           <DateNavigator />
           <TodayButton buttonComponent={({ setCurrentDate }) => <Button onClick={() => setCurrentDate(new Date())} color="primary" variant="contained" >Hoje</Button>} />
 
-          <ViewSwitcher switcherComponent={({ currentView, availableViews, onChange }) => <Box>
+          <ViewSwitcher switcherComponent={({ currentView, availableViews, onChange }) => <Box minWidth="10rem">
             <FormControl fullWidth variant="outlined">
               <InputLabel>Exibir por</InputLabel>
               <Select label="Exibir por"
@@ -525,7 +621,7 @@ class Demo extends React.PureComponent {
         </Dialog>
 
         <Fab
-          color="secondary"
+          color="primary"
           className={classes.addButton}
           onClick={() => {
             this.setState({ editingFormVisible: true })

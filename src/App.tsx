@@ -2,7 +2,7 @@ import React from 'react'
 
 import './config/ReactotronConfig'
 import './App.css'
-
+import 'moment/min/locales'
 import ThemeProvider from './context/ThemeContext'
 
 import { PersistGate } from 'redux-persist/integration/react'

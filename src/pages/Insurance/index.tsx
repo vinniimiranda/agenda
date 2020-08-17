@@ -1,73 +1,24 @@
-import React, { useState, useEffect } from 'react'
-import { Box, Button, Grid, FormControl, InputLabel, OutlinedInput, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, withStyles, createStyles, Theme, useTheme, IconButton, CircularProgress } from '@material-ui/core'
+import React from 'react'
+import { Box, Button, Grid, FormControl, InputLabel, OutlinedInput, TableContainer, Table, TableHead, TableRow, TableBody, useTheme, IconButton, CircularProgress } from '@material-ui/core'
 import { Add, EditOutlined } from '@material-ui/icons'
-import { lighten, darken } from 'polished'
+import moment from 'moment'
 
-// import { Container } from './styles';
+import { StyledTableCell, StyledTableRow } from '../../components/DataTable'
+import useRequest from '../../hooks/useRequest'
 
-const Assurance: React.FC = () => {
+moment.locale('pt-BR')
+
+type Insurance = {
+  id: number;
+  name: string;
+  document: string;
+  valid_thru: Date;
+  status: boolean;
+}
+
+const Insurances: React.FC = () => {
   const theme = useTheme()
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 2500)
-  }, [])
-
-  const StyledTableCell = withStyles((theme: Theme) =>
-    createStyles({
-      head: {
-        fontWeight: 'bold',
-        color: '#fff',
-        backgroundColor: theme.palette.primary.main,
-        borderBottom: 'none !important',
-        '&:first-child': {
-          borderTopLeftRadius: '.3rem',
-          borderBottomLeftRadius: '.3rem'
-
-        },
-        '&:last-child': {
-          borderTopRightRadius: '.3rem',
-          borderBottomRightRadius: '.3rem'
-        }
-
-      },
-      body: {
-
-        fontSize: 14,
-
-        borderBottom: 'none !important',
-
-        '&:first-child': {
-          borderTopLeftRadius: '.3rem',
-          borderBottomLeftRadius: '.3rem'
-
-        },
-        '&:last-child': {
-          borderTopRightRadius: '.3rem',
-          borderBottomRightRadius: '.3rem'
-        }
-
-      }
-    })
-  )(TableCell)
-
-  const StyledTableRow = withStyles((theme: Theme) =>
-    createStyles({
-      root: {
-
-        backgroundColor: theme.palette.background.paper,
-
-        '&:nth-of-type(odd)': {
-          // backgroundColor: theme.palette.action.hover
-        },
-        '&:hover': {
-          backgroundColor: theme.palette.type === 'dark' ? lighten('.10', theme.palette.background.paper) : darken('.10', theme.palette.background.paper),
-          cursor: 'pointer'
-        }
-
-      }
-    })
-  )(TableRow)
+  const { loading, data: insurances } = useRequest<Insurance>({ url: 'insurances' })
 
   return <Box display="flex" flexDirection="column" padding="2rem 0">
     <Box display="flex" justifyContent="space-between" alignItems="center" >
@@ -140,12 +91,12 @@ const Assurance: React.FC = () => {
               </TableHead>
 
               <TableBody>
-                {[1, 3, 2, 4, 6, 8, 10].map(app => (
-                  <StyledTableRow key={app} >
-                    <StyledTableCell align="center" >Allianz</StyledTableCell>
-                    <StyledTableCell align="center" >3060909066040</StyledTableCell>
-                    <StyledTableCell align="center" >11/08/2020</StyledTableCell>
-                    <StyledTableCell align="center" >Ativo</StyledTableCell>
+                {insurances?.map(insurance => (
+                  <StyledTableRow key={insurance.id} >
+                    <StyledTableCell align="center" >{insurance.name}</StyledTableCell>
+                    <StyledTableCell align="center" >{insurance.document}</StyledTableCell>
+                    <StyledTableCell align="center" >{moment(insurance.valid_thru).format('DD/MM/YYYY')}</StyledTableCell>
+                    <StyledTableCell align="center" >{insurance.status ? 'Ativo' : 'Inativo'}</StyledTableCell>
                     <StyledTableCell align="center" >
                       <IconButton color="secondary" style={{ padding: '.25rem' }}>
                         <EditOutlined />
@@ -163,4 +114,4 @@ const Assurance: React.FC = () => {
   </Box>
 }
 
-export default Assurance
+export default Insurances

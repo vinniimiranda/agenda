@@ -1,62 +1,74 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Button, Grid, FormControl, InputLabel, OutlinedInput, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, withStyles, createStyles, Theme, useTheme, IconButton, CircularProgress, Select, MenuItem } from '@material-ui/core'
-import { Add, EditOutlined } from '@material-ui/icons'
+import { Box, Button, Grid, FormControl, InputLabel, OutlinedInput, TableContainer, Table, TableHead, TableRow, TableBody, useTheme, IconButton, CircularProgress, Select, MenuItem, TablePagination, InputAdornment } from '@material-ui/core'
+import { Add, EditOutlined, Delete, Create } from '@material-ui/icons'
+import { StyledTableCell, StyledTableRow } from '../../components/DataTable'
+import { DebounceInput } from 'react-debounce-input'
+import * as FA from 'react-icons/fa'
+
+import FormDoctor from './Form'
+import useRequest from '../../hooks/useRequest'
+import { useDispatch } from 'react-redux'
+import deleteRequest from '../../requests/deleteRequest'
+
+export type Doctor = {
+  id: number;
+  name: string;
+  email: string;
+  gender: string;
+  phone: string;
+  document: string;
+  status: boolean;
+}
+
+type Params = {
+  page: number;
+  limit: number;
+  name?: string;
+  email?: string;
+}
 
 const Doctors: React.FC = () => {
   const theme = useTheme()
-  const [loading, setLoading] = useState(true)
+  const dispatch = useDispatch()
 
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 2500)
-  }, [])
+  const [params, setParams] = useState<Params>({ page: 1, limit: 10 })
+  const [open, setOpen] = useState(false)
+  const [doctor, setDoctor] = useState<Doctor>()
+  const { loading, total, data: doctors, reload, setReload } = useRequest<Doctor>({ url: 'doctors', params })
 
-  const StyledTableCell = withStyles((theme: Theme) =>
-    createStyles({
-      head: {
-        fontWeight: 'bold',
-        color: theme.palette.primary.main,
-        borderBottom: 'none !important'
-      },
-      body: {
+  function handleOpen () {
+    setOpen(true)
+  }
+  function handleClose () {
+    setOpen(false)
+  }
 
-        fontSize: 14,
+  function handleAddDoctor () {
+    setDoctor(undefined)
+    handleOpen()
+  }
 
-        borderBottom: 'none !important',
+  function handleEditDoctor (row: Doctor) {
+    setDoctor(row)
+    handleOpen()
+  }
 
-        '&:first-child': {
-          borderTopLeftRadius: '.3rem',
-          borderBottomLeftRadius: '.3rem'
+  function handleDeleteDoctor ({ id }: Doctor) {
+    deleteRequest({ url: 'doctors', id, name: 'Doutor(a)', setReload, dispatch })
+  }
 
-        },
-        '&:last-child': {
-          borderTopRightRadius: '.3rem',
-          borderBottomRightRadius: '.3rem'
-        }
+  function handleNameSearch (name: string) {
+    setParams({ ...params, name })
+  }
 
-      }
-    })
-  )(TableCell)
+  function handleChangePage (page: number) {
+    setParams({ ...params, page: page + 1 })
+  }
+  function handleChangeLimit (limit: number) {
+    setParams({ ...params, limit })
+  }
 
-  const StyledTableRow = withStyles((theme: Theme) =>
-    createStyles({
-      root: {
-
-        backgroundColor: theme.palette.background.paper,
-
-        '&:nth-of-type(odd)': {
-          // backgroundColor: theme.palette.action.hover
-        },
-        '&:hover': {
-          backgroundColor: theme.palette.primary.main,
-          cursor: 'pointer',
-          '& td': {
-            color: '#fff'
-          }
-        }
-
-      }
-    })
-  )(TableRow)
+  useEffect(handleClose, [reload])
 
   return <Box display="flex" flexDirection="column" padding="2rem 0">
     <Box display="flex" justifyContent="space-between" alignItems="center" >
@@ -66,43 +78,54 @@ const Doctors: React.FC = () => {
         }}>Doutores</h1>
       </Box>
       <Box>
-        <Button startIcon={<Add />} color="primary" variant="contained">Adicionar</Button>
+        <Button startIcon={<Add />} color="primary" variant="contained" onClick={handleAddDoctor}>Adicionar</Button>
       </Box>
     </Box>
     <Grid container spacing={1}>
       <Grid item lg={3} md={4} sm={6} xs={12}>
         <FormControl fullWidth variant="outlined">
           <InputLabel >Nome</InputLabel>
-          <OutlinedInput label="Nome" />
+          <DebounceInput
+            minLength={3}
+            debounceTimeout={300}
+            placeholder="Filtar por nome"
+            onChange={({ target }) => handleNameSearch(target.value)}
+            element={({ ...props }) => <OutlinedInput {...props} startAdornment={<InputAdornment position="start"><Create color="primary" /></InputAdornment>} label="Nome"></OutlinedInput>}
+          />
         </FormControl>
       </Grid>
       <Grid item lg={3} md={4} sm={6} xs={12}>
         <FormControl fullWidth variant="outlined">
-          <InputLabel >CRM</InputLabel>
-          <OutlinedInput label="CRM" />
+          <InputLabel >CRO</InputLabel>
+          <OutlinedInput
+            placeholder="Filtar por CRO"
+            startAdornment={<InputAdornment position="start"><FA.FaUserMd style={{ fontSize: '1.5rem', color: theme.palette.primary.main }} /></InputAdornment>}
+            label="CRO" />
         </FormControl>
       </Grid>
       <Grid item lg={3} md={4} sm={6} xs={12}>
         <FormControl fullWidth variant="outlined">
-          <InputLabel >Especialidade</InputLabel>
-          <Select label="Especialidade">
+          <InputLabel
+            placeholder="Filtar por Especialidade"
+          >Especialidade</InputLabel>
+          <Select label="Especialidade" >
             <MenuItem value={10}>Ortodontia</MenuItem>
             <MenuItem value={20}>Cirurgia</MenuItem>
           </Select>
         </FormControl>
       </Grid>
     </Grid>
-    <Box display="flex" justifyContent="flex-end" margin="1rem 0">
+    {/* <Box display="flex" justifyContent="flex-end" margin="1rem 0">
       <Box margin="0 .5rem">
         <Button variant="contained" color="secondary">Limpar</Button>
       </Box>
       <Box margin="0 0 0 .5rem">
         <Button color="primary" variant="contained">Pesquisar</Button>
       </Box>
-    </Box>
+    </Box> */}
     <Grid container>
       <Grid item xs={12}>
-        {loading ? (<Box display="flex" justifyContent="center" alignItems="center" height="65vh">
+        {loading ? (<Box display="flex" justifyContent="center" alignItems="center" height="60vh">
           <CircularProgress color="primary" size="5rem" />
         </Box>) : (<Box width="100%">
           <TableContainer >
@@ -118,25 +141,31 @@ const Doctors: React.FC = () => {
               <TableHead>
                 <TableRow>
                   <StyledTableCell align="center" >Nome</StyledTableCell>
-                  <StyledTableCell align="center" >CRM</StyledTableCell>
+                  <StyledTableCell align="center" >CRO</StyledTableCell>
                   <StyledTableCell align="center" >Especialidade</StyledTableCell>
                   <StyledTableCell align="center" >E-mail</StyledTableCell>
                   <StyledTableCell align="center" >Status</StyledTableCell>
                   <StyledTableCell align="center" >Editar</StyledTableCell>
+                  <StyledTableCell align="center" >Remover</StyledTableCell>
                 </TableRow>
               </TableHead>
 
               <TableBody>
-                {[1, 3, 2, 4, 6, 8, 10].map(app => (
-                  <StyledTableRow key={app} >
-                    <StyledTableCell align="center" >Dra. Daniela</StyledTableCell>
-                    <StyledTableCell align="center" >600058-SP</StyledTableCell>
+                {doctors?.map(doctor => (
+                  <StyledTableRow key={doctor.id} onDoubleClick={() => handleEditDoctor(doctor)}>
+                    <StyledTableCell align="center" >{doctor.name}</StyledTableCell>
+                    <StyledTableCell align="center" >{doctor.document}</StyledTableCell>
                     <StyledTableCell align="center" >Ortodontia</StyledTableCell>
-                    <StyledTableCell align="center" >daniela@med-agenda.com.br</StyledTableCell>
-                    <StyledTableCell align="center" >Ativo</StyledTableCell>
+                    <StyledTableCell align="center" >{doctor.email}</StyledTableCell>
+                    <StyledTableCell align="center" >{doctor.status ? 'Ativo' : 'Inativo'}</StyledTableCell>
                     <StyledTableCell align="center" >
-                      <IconButton color="secondary" style={{ padding: '.25rem' }}>
+                      <IconButton color="secondary" style={{ padding: '.25rem' }} onClick={() => handleEditDoctor(doctor)}>
                         <EditOutlined />
+                      </IconButton>
+                    </StyledTableCell>
+                    <StyledTableCell align="center" >
+                      <IconButton style={{ padding: '.25rem', color: '#c33' }} onClick={() => handleDeleteDoctor(doctor)}>
+                        <Delete />
                       </IconButton>
                     </StyledTableCell>
 
@@ -148,6 +177,17 @@ const Doctors: React.FC = () => {
         </Box>)}
       </Grid>
     </Grid>
+    <TablePagination
+      page={params.page - 1}
+      count={total}
+      rowsPerPage={params.limit}
+      onChangePage={(_, page) => handleChangePage(page)}
+      rowsPerPageOptions={[10, 20]}
+      onChangeRowsPerPage={({ target }) => handleChangeLimit(Number(target.value))}
+      labelDisplayedRows={({ from, to, count }) => `${from} de ${to} de ${count !== -1 ? count : to} registros`}
+      labelRowsPerPage="Linhas por página"
+      component="div" ></TablePagination>
+    <FormDoctor open={open} handleClose={handleClose} doctor={doctor} setReload={setReload} />
   </Box>
 }
 

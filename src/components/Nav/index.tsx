@@ -31,7 +31,7 @@ const Nav: React.FC = () => {
   const routes = [
     { path: '/home', label: 'Início', icon () { return <AIIcons.AiFillHome style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/schedule', label: 'Consultas', icon () { return <TIIcons.TiCalendar style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
-    { path: '/assurance', label: 'Convênios', icon () { return <GIIcons.GiHealthNormal style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
+    { path: '/insurances', label: 'Convênios', icon () { return <GIIcons.GiHealthNormal style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/doctors', label: 'Doutores', icon () { return <FAIcons.FaUserMd style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/patients', label: 'Pacientes', icon () { return <FAIcons.FaUsers style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } }
   ]
@@ -123,7 +123,7 @@ export const NavResponsive: React.FC<NavResponsiveProps> = ({ isOpen, handleClos
   const routes = [
     { path: '/home', label: 'Início', icon () { return <AIIcons.AiFillHome style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/schedule', label: 'Consultas', icon () { return <TIIcons.TiCalendar style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
-    { path: '/assurance', label: 'Convênios', icon () { return <GIIcons.GiHealthNormal style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
+    { path: '/insurances', label: 'Convênios', icon () { return <GIIcons.GiHealthNormal style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/doctors', label: 'Doutores', icon () { return <FAIcons.FaUserMd style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } },
     { path: '/patients', label: 'Pacientes', icon () { return <FAIcons.FaUsers style={{ fontSize: '1.50rem', color: theme.palette.type === 'dark' ? theme.palette.primary.main : theme.palette.background.default }} /> } }
   ]

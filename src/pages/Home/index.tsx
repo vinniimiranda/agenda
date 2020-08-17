@@ -15,12 +15,10 @@ import { darken, lighten } from 'polished'
 import { BsFillClockFill } from 'react-icons/bs'
 import { FaCheck } from 'react-icons/fa'
 import moment from 'moment'
-import 'moment/min/locales'
+
 moment.locale('pt-BR')
 
-const currentDate = '2020-08-09'
 const schedulerData = [
-
   { startDate: '2020-08-15T08:00', endDate: '2020-08-15T08:30', title: 'Pedro' },
   { startDate: '2020-08-15T08:30', endDate: '2020-08-15T09:00', title: 'João' },
   { startDate: '2020-08-15T09:00', endDate: '2020-08-15T09:30', title: 'Jorge' },
