@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Button, Grid, FormControl, InputLabel, OutlinedInput, TableContainer, Table, TableHead, TableRow, TableBody, useTheme, IconButton, CircularProgress, Select, MenuItem, TablePagination, InputAdornment } from '@material-ui/core'
-import { Add, EditOutlined, Delete, Create } from '@material-ui/icons'
+import { Add, EditOutlined, Delete, Create, Check, FilterList } from '@material-ui/icons'
 import { StyledTableCell, StyledTableRow } from '../../components/DataTable'
 import { DebounceInput } from 'react-debounce-input'
 import * as FA from 'react-icons/fa'
@@ -25,6 +25,7 @@ type Params = {
   limit: number;
   name?: string;
   email?: string;
+  status?: boolean;
 }
 
 const Doctors: React.FC = () => {
@@ -57,8 +58,8 @@ const Doctors: React.FC = () => {
     deleteRequest({ url: 'doctors', id, name: 'Doutor(a)', setReload, dispatch })
   }
 
-  function handleNameSearch (name: string) {
-    setParams({ ...params, name })
+  function handleSearch (key: string, value: string) {
+    setParams({ ...params, [key]: value })
   }
 
   function handleChangePage (page: number) {
@@ -89,29 +90,74 @@ const Doctors: React.FC = () => {
             minLength={3}
             debounceTimeout={300}
             placeholder="Filtar por nome"
-            onChange={({ target }) => handleNameSearch(target.value)}
-            element={({ ...props }) => <OutlinedInput {...props} startAdornment={<InputAdornment position="start"><Create color="primary" /></InputAdornment>} label="Nome"></OutlinedInput>}
+            onChange={({ target }) => handleSearch('name', target.value)}
+            element={({ ...props }) => <OutlinedInput {...props} startAdornment={<InputAdornment position="start"><Create style={{
+              color: theme.palette.primary.main
+            }} /></InputAdornment>} label="Nome"></OutlinedInput>}
           />
         </FormControl>
       </Grid>
       <Grid item lg={3} md={4} sm={6} xs={12}>
         <FormControl fullWidth variant="outlined">
           <InputLabel >CRO</InputLabel>
-          <OutlinedInput
-            placeholder="Filtar por CRO"
-            startAdornment={<InputAdornment position="start"><FA.FaUserMd style={{ fontSize: '1.5rem', color: theme.palette.primary.main }} /></InputAdornment>}
-            label="CRO" />
+          <DebounceInput
+            minLength={5}
+            debounceTimeout={300}
+            onChange={({ target }) => handleSearch('document', target.value)}
+            element={({ ...props }) =>
+              <OutlinedInput
+                {...props}
+                placeholder="Filtar por CRO"
+                startAdornment={<InputAdornment position="start"><FA.FaUserMd style={{ fontSize: '1.5rem', color: theme.palette.primary.main }} /></InputAdornment>}
+                label="CRO" />}
+          />
         </FormControl>
       </Grid>
+
       <Grid item lg={3} md={4} sm={6} xs={12}>
         <FormControl fullWidth variant="outlined">
           <InputLabel
             placeholder="Filtar por Especialidade"
           >Especialidade</InputLabel>
-          <Select label="Especialidade" >
-            <MenuItem value={10}>Ortodontia</MenuItem>
-            <MenuItem value={20}>Cirurgia</MenuItem>
+          <Select
+            startAdornment={<InputAdornment position="start"><FilterList style={{
+              color: theme.palette.primary.main
+            }} /></InputAdornment>}
+            label="Especialidade" color="primary"
+            placeholder="Filtar por Especialidade"
+            defaultValue={''}
+            value={params.status}
+            displayEmpty
+            onChange={(e) => handleSearch('status', e.target.value as string)}
+          >
+            <MenuItem value="">Selecionar</MenuItem>
+            <MenuItem value="1">Ortodontia</MenuItem>
+            <MenuItem value="0">Cirurgia</MenuItem>
           </Select>
+
+        </FormControl>
+      </Grid>
+      <Grid item lg={3} md={4} sm={6} xs={12}>
+        <FormControl fullWidth variant="outlined">
+          <InputLabel
+            placeholder="Filtar por Status"
+          >Status</InputLabel>
+          <Select
+            startAdornment={<InputAdornment position="start"><Check style={{
+              color: theme.palette.primary.main
+            }} /></InputAdornment>}
+            label="Status" color="primary"
+            placeholder="Filtar por Status"
+            defaultValue={''}
+            value={params.status}
+            displayEmpty
+            onChange={(e) => handleSearch('status', e.target.value as string)}
+          >
+            <MenuItem value="">Selecionar</MenuItem>
+            <MenuItem value="1">Ativo</MenuItem>
+            <MenuItem value="0">Inativo</MenuItem>
+          </Select>
+
         </FormControl>
       </Grid>
     </Grid>

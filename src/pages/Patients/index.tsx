@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Button, Grid, FormControl, InputLabel, OutlinedInput, TableContainer, Table, TableHead, TableRow, TableBody, useTheme, IconButton, CircularProgress, TablePagination, InputAdornment } from '@material-ui/core'
-import { Add, EditOutlined, Delete, Create } from '@material-ui/icons'
+import { Box, Button, Grid, FormControl, InputLabel, OutlinedInput, TableContainer, Table, TableHead, TableRow, TableBody, useTheme, IconButton, CircularProgress, TablePagination, InputAdornment, Select, MenuItem } from '@material-ui/core'
+import { Add, EditOutlined, Delete, Create, Check } from '@material-ui/icons'
 import { StyledTableCell, StyledTableRow } from '../../components/DataTable'
+import moment from 'moment'
+import * as FA from 'react-icons/fa'
 
 import FormPatient from './Form'
 import useRequest from '../../hooks/useRequest'
 import deleteRequest from '../../requests/deleteRequest'
 import { useDispatch } from 'react-redux'
 import { DebounceInput } from 'react-debounce-input'
+import { GiHealthNormal } from 'react-icons/gi'
 
 export type Patient = {
   id: number;
@@ -23,6 +26,9 @@ type Params = {
   page: number;
   limit: number;
   name?: string;
+  document?: string;
+  insurance?: string;
+  status?: boolean;
 }
 
 const Patients: React.FC = () => {
@@ -56,8 +62,8 @@ const Patients: React.FC = () => {
     deleteRequest({ url: 'patients', id, name: 'Paciente', setReload, dispatch })
   }
 
-  function handleNameSearch (name: string) {
-    setParams({ ...params, name })
+  function handleSearch (key: string, value: string) {
+    setParams({ ...params, [key]: value })
   }
 
   function handleChangePage (page: number) {
@@ -88,28 +94,78 @@ const Patients: React.FC = () => {
             minLength={3}
             debounceTimeout={300}
             placeholder="Filtar por nome"
-            onChange={({ target }) => handleNameSearch(target.value)}
-            element={({ ...props }) => <OutlinedInput
-              {...props}
-              startAdornment={<InputAdornment position="start"><Create color="primary" /></InputAdornment>}
-              label="Nome"
-              color="primary"
-              name="name"
-            />}
+            onChange={({ target }) => handleSearch('name', target.value)}
+            element={({ ...props }) => <OutlinedInput {...props} startAdornment={<InputAdornment position="start"><Create style={{
+              color: theme.palette.primary.main
+            }} /></InputAdornment>} label="Nome"></OutlinedInput>}
           />
+        </FormControl>
+      </Grid>
+      <Grid item lg={3} md={4} sm={6} xs={12}>
+        <FormControl fullWidth variant="outlined">
+          <InputLabel >CPF</InputLabel>
+          <DebounceInput
+            minLength={5}
+            debounceTimeout={300}
+            onChange={({ target }) => handleSearch('document', target.value)}
+            element={({ ...props }) =>
+              <OutlinedInput
+                {...props}
+                placeholder="Filtar por CPF"
+                startAdornment={<InputAdornment position="start"><FA.FaUser style={{ fontSize: '1.5rem', color: theme.palette.primary.main }} /></InputAdornment>}
+                label="CPF" />}
+          />
+        </FormControl>
+      </Grid>
+
+      <Grid item lg={3} md={4} sm={6} xs={12}>
+        <FormControl fullWidth variant="outlined">
+          <InputLabel
+            placeholder="Filtar por convênio"
+          >Convênio</InputLabel>
+          <Select
+            startAdornment={<InputAdornment position="start"><GiHealthNormal style={{
+              color: theme.palette.primary.main
+            }} /></InputAdornment>}
+            label="Convênio" color="primary"
+            placeholder="Filtar por convênio"
+            defaultValue={''}
+            value={params.insurance}
+            displayEmpty
+            onChange={(e) => handleSearch('insurance', e.target.value as string)}
+          >
+            <MenuItem value="">Selecionar</MenuItem>
+            <MenuItem value="1">Allianz</MenuItem>
+            <MenuItem value="0">Odontoprev</MenuItem>
+          </Select>
 
         </FormControl>
       </Grid>
 
+      <Grid item lg={3} md={4} sm={6} xs={12}>
+        <FormControl fullWidth variant="outlined">
+          <InputLabel
+            placeholder="Filtar por Status"
+          >Status</InputLabel>
+          <Select
+            startAdornment={<InputAdornment position="start"><Check style={{
+              color: theme.palette.primary.main
+            }} /></InputAdornment>}
+            label="Status" color="primary"
+            placeholder="Filtar por Status"
+            defaultValue={''}
+            value={params.status}
+            displayEmpty
+            onChange={(e) => handleSearch('status', e.target.value as string)}
+          >
+            <MenuItem value="">Selecionar</MenuItem>
+            <MenuItem value="1">Ativo</MenuItem>
+            <MenuItem value="0">Inativo</MenuItem>
+          </Select>
+
+        </FormControl>
+      </Grid>
     </Grid>
-    {/* <Box display="flex" justifyContent="flex-end" margin="1rem 0">
-      <Box margin="0 .5rem">
-        <Button variant="contained" color="secondary">Limpar</Button>
-      </Box>
-      <Box margin="0 0 0 .5rem">
-        <Button color="primary" variant="contained">Pesquisar</Button>
-      </Box>
-    </Box> */}
     <Grid container>
       <Grid item xs={12}>
         {loading ? (<Box display="flex" justifyContent="center" alignItems="center" height="60vh">
@@ -129,6 +185,8 @@ const Patients: React.FC = () => {
                 <TableRow>
                   <StyledTableCell align="center" >Nome</StyledTableCell>
                   <StyledTableCell align="center" >E-mail</StyledTableCell>
+                  <StyledTableCell align="center" >CPF</StyledTableCell>
+                  <StyledTableCell align="center" >Dt. Nascimento</StyledTableCell>
                   <StyledTableCell align="center" >Telefone</StyledTableCell>
                   <StyledTableCell align="center" >Convênio</StyledTableCell>
                   <StyledTableCell align="center" >Status</StyledTableCell>
@@ -142,6 +200,10 @@ const Patients: React.FC = () => {
                   <StyledTableRow key={patient.id} onDoubleClick={() => handleEditPatient(patient)} >
                     <StyledTableCell align="center" >{patient.name}</StyledTableCell>
                     <StyledTableCell align="center" >{patient.email}</StyledTableCell>
+                    <StyledTableCell align="center" >{patient.document}</StyledTableCell>
+                    <StyledTableCell align="center" >
+                      {`${moment(patient.birth_date).utcOffset(0).format('DD/MM/YYYY')} (${moment().diff(moment(patient.birth_date).utcOffset(0), 'y')} anos)`}
+                    </StyledTableCell>
                     <StyledTableCell align="center" >{patient.phone}</StyledTableCell>
                     <StyledTableCell align="center" >Allianz</StyledTableCell>
                     <StyledTableCell align="center" >{patient.status ? 'Ativo' : 'Inativo'}</StyledTableCell>

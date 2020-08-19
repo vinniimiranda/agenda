@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import { Box, Drawer, IconButton, Grid, FormControl, InputLabel, OutlinedInput, useTheme, Select, MenuItem, Button, InputAdornment } from '@material-ui/core'
-import { Close, Mail, Create, Phone, Check, CalendarToday } from '@material-ui/icons'
+import { Close, Mail, Create, Phone, Check, CalendarToday, Business } from '@material-ui/icons'
 import * as FA from 'react-icons/fa'
-import { Patient } from '..'
-import { useForm, Controller } from 'react-hook-form'
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import moment from 'moment'
 import MomentUtils from '@date-io/moment'
 
+import { Insurance } from '..'
+import { useForm, Controller } from 'react-hook-form'
 import postRequest from '../../../requests/postRequest'
 import { useDispatch } from 'react-redux'
 import updateRequest from '../../../requests/updateRequest'
@@ -17,37 +17,33 @@ type Props = {
   open: boolean;
   handleClose: () => void;
   setReload: (state: any) => void;
-  patient?: Patient;
+  insurance?: Insurance;
 }
 
-const FormPatient: React.FC<Props> = ({ open, handleClose, patient, setReload }: Props) => {
+const FormInsurance: React.FC<Props> = ({ open, handleClose, insurance, setReload }: Props) => {
   const theme = useTheme()
   const responsive = useResponsive(425)
+
   const dispatch = useDispatch()
 
   const { register, handleSubmit, setValue, getValues, control } = useForm()
   function onSubmit (data) {
-    if (patient) {
-      updateRequest({ url: 'patients', id: patient.id, name: 'Paciente', data, setReload, dispatch })
+    if (insurance) {
+      updateRequest({ url: 'insurances', id: insurance.id, name: 'Convênio', data, setReload, dispatch })
     } else {
-      postRequest({ url: 'patients', name: 'Paciente', data, setReload, dispatch })
+      postRequest({ url: 'insurances', name: 'Convênio', data, setReload, dispatch })
     }
   }
 
   useEffect(() => {
-    if (patient) {
-      setValue('gender', patient.gender)
-      setValue('status', patient.status)
-      setValue('birth_date', moment(patient.birth_date).utcOffset(0))
+    if (insurance) {
+      setValue('status', insurance.status)
     } else {
-      setValue('gender', 'F')
       setValue('status', true)
-      setValue('birth_date', moment())
     }
-  }, [open, patient, setValue])
+  }, [open, insurance, setValue])
 
   React.useEffect(() => {
-    register('gender', { required: true })
     register('status')
   }, [register])
 
@@ -66,16 +62,16 @@ const FormPatient: React.FC<Props> = ({ open, handleClose, patient, setReload }:
             <Grid container spacing={2}>
               <Grid item lg={6} md={6} sm={12} xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel >Nome</InputLabel>
+                  <InputLabel required>Nome</InputLabel>
                   <OutlinedInput
                     startAdornment={<InputAdornment position="start"><Create style={{
                       color: theme.palette.primary.main
                     }} /></InputAdornment>}
-                    label="Nome"
+                    autoComplete="new-password"
+                    label="Nome *"
                     color="primary"
                     name="name"
-                    placeholder="Digite o nome"
-                    defaultValue={patient?.name}
+                    defaultValue={insurance?.name}
                     inputRef={register({ required: true })}
                   />
                 </FormControl>
@@ -83,31 +79,30 @@ const FormPatient: React.FC<Props> = ({ open, handleClose, patient, setReload }:
 
               <Grid item lg={6} md={6} sm={12} xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel >CPF</InputLabel>
+                  <InputLabel required>CNPJ</InputLabel>
                   <OutlinedInput
-                    startAdornment={<InputAdornment position="start"><FA.FaUser style={{ fontSize: '1.5rem', color: theme.palette.primary.main }} /></InputAdornment>}
-                    label="CPF"
+                    startAdornment={<InputAdornment position="start"><Business style={{ fontSize: '1.5rem', color: theme.palette.primary.main }} /></InputAdornment>}
+                    label="CNPJ  *"
                     color="primary"
                     name="document"
-                    placeholder="Digite o cpf"
-                    defaultValue={patient?.document}
+                    defaultValue={insurance?.document}
                     inputRef={register({ required: true })}
                   />
                 </FormControl>
               </Grid>
+
               <Grid item lg={6} md={6} sm={12} xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel >E-mail</InputLabel>
+                  <InputLabel required>Email</InputLabel>
                   <OutlinedInput
                     startAdornment={<InputAdornment position="start"><Mail style={{
                       color: theme.palette.primary.main
                     }} /></InputAdornment>}
-                    label="E-mail"
+                    label="Email *"
                     color="primary"
                     name="email"
-                    placeholder="Digite o e-mail"
-                    defaultValue={patient?.email}
-                    inputRef={register({ required: true })}
+                    defaultValue={insurance?.email}
+                    inputRef={register}
                   />
                 </FormControl>
               </Grid>
@@ -122,8 +117,7 @@ const FormPatient: React.FC<Props> = ({ open, handleClose, patient, setReload }:
                     label="Telefone"
                     color="primary"
                     name="phone"
-                    placeholder="Digite o telefone"
-                    defaultValue={patient?.phone}
+                    defaultValue={insurance?.phone}
                     inputRef={register}
                   />
                 </FormControl>
@@ -131,48 +125,31 @@ const FormPatient: React.FC<Props> = ({ open, handleClose, patient, setReload }:
 
               <Grid item lg={6} md={6} sm={12} xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel >Data de Nascimento</InputLabel>
+                  <InputLabel >Valido até</InputLabel>
                   <MuiPickersUtilsProvider utils={MomentUtils} locale="pt-BR">
                     <Controller
                       startAdornment={<InputAdornment position="start"><FA.FaTransgender style={{ fontSize: '1.5rem', color: theme.palette.primary.main }} /></InputAdornment>}
                       as={<DatePicker
-                        label="Data de Nascimento"
+                        label="Valido até"
                         variant="dialog"
-                        value={getValues('birth_date')}
+                        value={getValues('valid_thru')}
                         inputVariant='outlined'
                         format='DD/MM/YYYY'
                         onError={() => null}
-                        onChange={date => console.log('birth_date', date?.toDate())}
+                        onChange={date => console.log('valid_thru', date?.toDate())}
                         TextFieldComponent={({ ...props }: any) => <OutlinedInput
                           {...props}
-                          label="Data de Nascimento"
+                          label="Valido até"
                           startAdornment={<InputAdornment position="start"><CalendarToday style={{
                             color: theme.palette.primary.main
                           }} /></InputAdornment>} />}
                       />}
-                      name="birth_date"
+                      name="valid_thru"
                       start
-                      defaultValue={moment(patient?.birth_date).utcOffset(0)}
+                      defaultValue={moment(insurance?.valid_thru).utcOffset(0)}
                       control={control}
                     />
                   </MuiPickersUtilsProvider>
-                </FormControl>
-              </Grid>
-
-              <Grid item lg={6} md={6} sm={12} xs={12}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel >Sexo</InputLabel>
-                  <Select
-                    startAdornment={<InputAdornment position="start"><FA.FaTransgender style={{ fontSize: '1.5rem', color: theme.palette.primary.main }} /></InputAdornment>}
-                    label="Sexo"
-                    color="primary"
-                    name="gender"
-                    defaultValue={patient?.gender || 'F'}
-                    onChange={(e) => setValue('gender', e.target.value as any)}
-                  >
-                    <MenuItem value="F">Feminimo</MenuItem>
-                    <MenuItem value="M">Masculino</MenuItem>
-                  </Select>
                 </FormControl>
               </Grid>
 
@@ -184,7 +161,7 @@ const FormPatient: React.FC<Props> = ({ open, handleClose, patient, setReload }:
                       color: theme.palette.primary.main
                     }} /></InputAdornment>}
                     label="Status" color="primary"
-                    defaultValue={patient?.status !== undefined ? patient.status ? '1' : '0' : '1'}
+                    defaultValue={insurance?.status !== undefined ? insurance.status ? '1' : '0' : '1'}
                     onChange={(e) => setValue('status', Boolean(parseInt(e.target.value as string)))}
                   >
                     <MenuItem value="1">Ativo</MenuItem>
@@ -205,4 +182,4 @@ const FormPatient: React.FC<Props> = ({ open, handleClose, patient, setReload }:
   </Box>
 }
 
-export default FormPatient
+export default FormInsurance

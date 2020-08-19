@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import postRequest from '../../../requests/postRequest'
 import { useDispatch } from 'react-redux'
 import updateRequest from '../../../requests/updateRequest'
+import { useResponsive } from '../../../hooks/useResponsive'
 
 type Props = {
   open: boolean;
@@ -17,6 +18,8 @@ type Props = {
 
 const FormDoctor: React.FC<Props> = ({ open, handleClose, doctor, setReload }: Props) => {
   const theme = useTheme()
+  const responsive = useResponsive(425)
+
   const dispatch = useDispatch()
 
   const { register, handleSubmit, setValue } = useForm()
@@ -45,7 +48,7 @@ const FormDoctor: React.FC<Props> = ({ open, handleClose, doctor, setReload }: P
 
   return <Box>
     <Drawer open={open} onClose={handleClose}>
-      <Box width={theme.spacing(100)} padding="1rem" display="flex" flexDirection="column">
+      <Box width={responsive ? '85vw' : '60vw'} padding="1rem" display="flex" flexDirection="column">
         <Box display="flex" justifyContent="flex-end" marginBottom="1rem">
           <IconButton
             onClick={handleClose}
@@ -58,10 +61,12 @@ const FormDoctor: React.FC<Props> = ({ open, handleClose, doctor, setReload }: P
             <Grid container spacing={2}>
               <Grid item lg={6} md={6} sm={12} xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel >Nome</InputLabel>
+                  <InputLabel required>Nome</InputLabel>
                   <OutlinedInput
-                    startAdornment={<InputAdornment position="start"><Create color="primary" /></InputAdornment>}
-                    label="Nome"
+                    startAdornment={<InputAdornment position="start"><Create style={{
+                      color: theme.palette.primary.main
+                    }} /></InputAdornment>}
+                    label="Nome *"
                     color="primary"
                     name="name"
                     defaultValue={doctor?.name}
@@ -72,10 +77,10 @@ const FormDoctor: React.FC<Props> = ({ open, handleClose, doctor, setReload }: P
 
               <Grid item lg={6} md={6} sm={12} xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel >CRM</InputLabel>
+                  <InputLabel required>CRO</InputLabel>
                   <OutlinedInput
                     startAdornment={<InputAdornment position="start"><FA.FaUserMd style={{ fontSize: '1.5rem', color: theme.palette.primary.main }} /></InputAdornment>}
-                    label="CRM"
+                    label="CRO  *"
                     color="primary"
                     name="document"
                     defaultValue={doctor?.document}
@@ -86,10 +91,12 @@ const FormDoctor: React.FC<Props> = ({ open, handleClose, doctor, setReload }: P
 
               <Grid item lg={6} md={6} sm={12} xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel >Email</InputLabel>
+                  <InputLabel required>Email</InputLabel>
                   <OutlinedInput
-                    startAdornment={<InputAdornment position="start"><Mail color="primary" /></InputAdornment>}
-                    label="Email"
+                    startAdornment={<InputAdornment position="start"><Mail style={{
+                      color: theme.palette.primary.main
+                    }} /></InputAdornment>}
+                    label="Email *"
                     color="primary"
                     name="email"
                     defaultValue={doctor?.email}
@@ -102,7 +109,9 @@ const FormDoctor: React.FC<Props> = ({ open, handleClose, doctor, setReload }: P
                 <FormControl fullWidth variant="outlined">
                   <InputLabel >Telefone</InputLabel>
                   <OutlinedInput
-                    startAdornment={<InputAdornment position="start"><Phone color="primary" /></InputAdornment>}
+                    startAdornment={<InputAdornment position="start"><Phone style={{
+                      color: theme.palette.primary.main
+                    }} /></InputAdornment>}
                     label="Telefone"
                     color="primary"
                     name="phone"
@@ -133,7 +142,9 @@ const FormDoctor: React.FC<Props> = ({ open, handleClose, doctor, setReload }: P
                 <FormControl fullWidth variant="outlined">
                   <InputLabel >Status</InputLabel>
                   <Select
-                    startAdornment={<InputAdornment position="start"><Check color="primary" /></InputAdornment>}
+                    startAdornment={<InputAdornment position="start"><Check style={{
+                      color: theme.palette.primary.main
+                    }} /></InputAdornment>}
                     label="Status" color="primary"
                     defaultValue={doctor?.status !== undefined ? doctor.status ? '1' : '0' : '1'}
                     onChange={(e) => setValue('status', Boolean(parseInt(e.target.value as string)))}
