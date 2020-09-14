@@ -14,7 +14,7 @@ const ThemeUpdateContext = createContext(() => { })
 const ThemeProvider: React.FC = ({ children }) => {
   const lightMode = Boolean(localStorage.getItem('lightMode'))
 
-  const [darkTheme, setDarkTheme] = useState(!lightMode)
+  const [darkTheme, setDarkTheme] = useState(lightMode)
 
   function toggleTheme () {
     setDarkTheme(prevDarkTheme => {
