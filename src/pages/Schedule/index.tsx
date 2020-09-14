@@ -52,10 +52,8 @@ import { teal, blue, indigo } from '@material-ui/core/colors'
 moment.locale('pt-BR')
 
 const appointments = [
-  { startDate: '2020-08-17T08:00', endDate: '2020-08-17T08:30', title: 'Franciely', patient: 'Franciely', id: 1, doc: 'Daniela' },
-  { startDate: '2020-08-17T10:30', endDate: '2020-08-17T11:00', title: 'Flavio', patient: 'Flavio', id: 2, doc: 'Daniela' }
-  // { startDate: '2020-08-17T09:00', endDate: '2020-08-17T09:30', title: 'Telma', patient: 'Telma', id: 3, doc: 'Daniela' },
-  // { startDate: '2020-08-17T09:30', endDate: '2020-08-17T10:00', title: 'Felipe', patient: 'Felipe', id: 4, doc: 'Daniela' }
+  { startDate: moment().set('hour', '08').set('minutes', '00'), endDate: moment().set('hour', '09').set('minutes', '00'), title: 'João da Silva', patient: 'João da Silva', id: 1, doc: 'Joana' },
+  { startDate: moment().set('hour', '09').set('minutes', '10'), endDate: moment().set('hour', '09').set('minutes', '45'), title: 'José da Silva', patient: 'José da Silva', id: 2, doc: 'Joana' }
 ]
 
 const containerStyles = (theme: Theme) => ({
@@ -151,7 +149,7 @@ const AppointmentContent = withStyles(containerStyles, { name: 'AppointmentConte
           </div>
         </div>
         <div className={classes.text}>
-          {`Médico: ${data.doc}`}
+          {`Médico(a): ${data.doc}`}
         </div>
       </div>
     </Appointments.AppointmentContent>
@@ -305,15 +303,15 @@ const AppointmentFormContainerBasic: React.FC<AppointmentFormContainerBasicProps
               <InputLabel>Dr(a).</InputLabel>
               <Select {...selectEditorProps('Dr(a).', 'doc')}>
 
-                <MenuItem value="Daniela">Daniela</MenuItem>
+                <MenuItem value="Joana da Silva">Joana da Silva</MenuItem>
 
               </Select>
             </FormControl>
             <FormControl fullWidth variant="outlined" style={{ marginLeft: '1rem' }}>
               <InputLabel>Paciente</InputLabel>
               <Select {...selectEditorProps('Paciente', 'patient')}>
-                <MenuItem value="Franciely">Franciely</MenuItem>
-                <MenuItem value="Flavio">Flavio</MenuItem>
+                <MenuItem value="João da Silva">João da Silva</MenuItem>
+                <MenuItem value="José da Silva">José da Silva</MenuItem>
               </Select>
             </FormControl>
 

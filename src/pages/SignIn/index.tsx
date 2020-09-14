@@ -102,6 +102,7 @@ const SignIn: React.FC = () => {
                     autoComplete="off"
                     autoCapitalize="off"
                     name="email"
+                    defaultValue="teste@med-agenda.com.br"
                     inputProps={{ autoCapitalize: 'off' }}
                     inputRef={register({ required: true, pattern: /\S+@\S+\.\S+/ })}
                     label="Email *"
@@ -120,6 +121,7 @@ const SignIn: React.FC = () => {
                     autoComplete="current-password"
                     name="password"
                     label="Senha *"
+                    defaultValue="teste123"
                     inputProps={{ autoCapitalize: 'off' }}
                     inputRef={register({ required: true })}
                   />
